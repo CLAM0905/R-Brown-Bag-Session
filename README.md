@@ -1,6 +1,6 @@
 # Brown Bag given to data science cohort 
 
-## This is a three part overview of how to effectively look at 2020 Census data within R/RStudio
+## This is a three part overview of how to effectively look at 2020 Census data using  R within RStudio
 
     1. Exploring your data with simple commands
 
