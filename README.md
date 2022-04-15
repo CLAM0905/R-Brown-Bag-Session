@@ -1,4 +1,3 @@
-# R-Brown-Bag-Session
 # Brown Bag given to data science cohort 
 
 ## This is a three part overview of how to effectively look at 2020 Census data within R/RStudio
@@ -17,8 +16,8 @@
 
     3. Explore with Tidycensus and API: connect to census.gov to export a large number of public available data
 
-#### All information and much more can be found in this book, R for Data Science: https://r4ds.had.co.nz/
+### All information and much more can be found in this book, R for Data Science: https://r4ds.had.co.nz/
 
-#### Request Census API: https://www.census.gov/data/developers/guidance/api-user-guide.html
+### Request Census API: https://www.census.gov/data/developers/guidance/api-user-guide.html
 
-#### RStudio cheatsheets: https://www.rstudio.com/resources/cheatsheets/
+### RStudio cheatsheets: https://www.rstudio.com/resources/cheatsheets/
