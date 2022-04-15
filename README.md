@@ -22,7 +22,7 @@
 
 ### RStudio cheatsheets: https://www.rstudio.com/resources/cheatsheets/
 
-### Visualization using ggplot tutorial:https://ggplot2tor.com/ ;  https://www.tutorialspoint.com/ggplot2/ggplot2_quick_guide.htm
+### Visualization using ggplot tutorial: https://ggplot2tor.com/ ;  https://www.tutorialspoint.com/ggplot2/ggplot2_quick_guide.htm
 
 ### Tidyverse ecosystem: https://www.tidyverse.org/
 
