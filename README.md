@@ -21,3 +21,11 @@
 ### Request Census API: https://www.census.gov/data/developers/guidance/api-user-guide.html
 
 ### RStudio cheatsheets: https://www.rstudio.com/resources/cheatsheets/
+
+### Visualization using ggplot tutorial:https://ggplot2tor.com/ ;  https://www.tutorialspoint.com/ggplot2/ggplot2_quick_guide.htm
+
+### Tidyverse ecosystem: https://www.tidyverse.org/
+
+### Tidycensus: https://walker-data.com/tidycensus/
+
+### Tutorial on using Tidycensus (excellent, highly recommend!): http://ssdan.net/blog/2022-r-webinar-resources-analyzing-census-data-using-r
