@@ -469,7 +469,7 @@ API_VA <- pop20 %>% filter(GEOID == 51) %>%
 
 ACS_VA <- Census2020 %>% 
   filter(Area == "Virginia") %>% 
-  (`2020 Census Resident Population`)
+  select(`2020 Census Resident Population`)
 
 
 ## ---- do the two sources of data match?---------------------------------------
