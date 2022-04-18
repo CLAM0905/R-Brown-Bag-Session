@@ -609,9 +609,9 @@ va_group_quarters <-  get_decennial(
 
 ## Use rbind to concatenate rows
 
-dmv_group_quarters <-  rbind(va_group_quarters,
+dmv_group_quarters <-  rbind(dc_group_quarters,
                              md_group_quarters,
-                             dc_group_quarters)
+                             va_group_quarters)
 
 
 ## View DMV group quarters object
@@ -623,44 +623,16 @@ dmv_group_quarters
 
 # District of Columbia
  
-dc_hispanic <-  get_decennial(
+dmv_hispanic <-  get_decennial(
   geography = "county", 
   variables = "P2_002N", 
-  state = "DC", 
+  state = c("DC","MD","VA"), 
   year = 2020)
-
-
-# Maryland
- 
-md_hispanic <-  get_decennial(
-  geography = "county", 
-  variables = "P2_002N", 
-  state = "MD", 
-  year = 2020)
-
-
-# Virginia
- 
-va_hispanic <-  get_decennial(
-  geography = "county", 
-  variables = "P2_002N", 
-  state = "VA", 
-  year = 2020)
-
 
 ## Show DMV Hispanic data  
 
-#District of Columbia
- 
-dc_hispanic
- 
-# Maryland
+dmv_hispanic
 
-md_hispanic
-
-# Virginia
-
-va_hispanic
 
  
 
