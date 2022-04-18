@@ -323,7 +323,8 @@ PopBelowLimitbyRegion <- PopBelowLimit %>%
 PopBelowLimitbyRegion
 
  
-## Examples of combining multiple dplyr verbs in one workflow                         - You can use all of the verbs chained together in logical order to achieve complex results                      
+## Examples of combining multiple dplyr verbs in one workflow                       
+
 
 ## Utilize select and rename functions in one workflow
 
@@ -352,9 +353,8 @@ Census2020Bonus1 <-  Census2020Bonus %>%
 
 ## View glimpse of new object
 
- 
-
 glimpse(Census2020Bonus1)
+
 
 ## Combine the mutate and summarize functions in one workflow
 
@@ -455,7 +455,7 @@ ggplot(CensusDataRanked) +
 #install.packages("tidycensus") 
 library(tidycensus)
 
-census_api_key("INSERT API HERE")
+census_api_key("INSERT API HERE", overwrite = FALSE, install = TRUE)
 
 
 ## Search for Variables         
