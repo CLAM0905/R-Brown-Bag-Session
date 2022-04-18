@@ -462,7 +462,7 @@ census_api_key("INSERT API HERE")
 
 vars <-  load_variables(2020, "pl")
 
-print(tbl_df(vars), n=301)
+print(vars, n=301)
 
 
 ## Look at Decennial Population Numbers    
@@ -475,7 +475,7 @@ pop20 <-  get_decennial(
 
 ## View table of decennial counts
 
-print(tbl_df(pop20), n=52)
+print(pop20, n=52)
 
 
 ## View DMV population from Census provided data
@@ -631,7 +631,7 @@ dmv_hispanic <-  get_decennial(
 
 ## Show DMV Hispanic data  
 
-dmv_hispanic
+print(dmv_hispanic, n=158)
 
 
  
