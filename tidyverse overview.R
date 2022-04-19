@@ -129,7 +129,7 @@ PopBelowLimit <-  Census2020Sub1 %>%
   filter(Pop2020 <= 9999999)
 
 
-## View dimenstions of the new objects
+## View dimensions of the new objects
 
 dim(PopAboveLimit)
 
