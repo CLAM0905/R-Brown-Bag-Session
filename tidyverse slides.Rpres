@@ -1,0 +1,891 @@
+Tidyverse Slides
+========================================================
+author: Jessica Klein, jessica.marie.klein@census.gov
+date: 4/19/2022
+autosize: true
+
+Part 1: Exploring your dataset
+========================================================
+
+Load 2020 Census Population dataset
+========================================================
+
+```{r, message=FALSE}
+
+install.packages("tidyverse", repos = "http://cran.us.r-project.org")
+install.packages("readxl", repos = "http://cran.us.r-project.org")
+library(tidyverse)
+library(readxl)
+
+```
+
+```{r}
+
+Census2020 <- read_excel("2020 Census File.xlsx")
+
+```
+
+Investigate with glimpse
+========================================================
+
+```{r}
+
+glimpse(Census2020)
+
+```
+
+Explore the dimensions
+========================================================
+
+```{r}
+
+dim(Census2020)
+
+```
+
+Display column and row names
+========================================================
+
+```{r}
+
+colnames(Census2020)
+
+rownames(Census2020)
+
+```
+
+View top and bottom observations
+========================================================
+
+```{r}
+
+head(Census2020)
+
+tail(Census2020)
+
+```
+
+Explore the largest and smallest in a column
+========================================================
+
+```{r}
+
+min(Census2020$`2020 Census Resident Population`)
+
+max(Census2020$`2020 Census Resident Population`)
+
+```
+
+Display summary statiatics
+========================================================
+
+```{r}
+
+summary(Census2020)
+
+```
+
+Open and explore the dataset in a new pane- with filtering options
+========================================================
+
+```{r}
+
+View(Census2020)
+
+```
+
+Identify a column
+========================================================
+
+```{r}
+
+Census2020$`2020 Census Resident Population`
+
+Census2020$Region
+
+
+```
+
+Display contents of a column as a table
+========================================================
+
+```{r}
+
+table(Census2020$Region)
+
+table(Census2020$Area, Census2020$Region)
+
+
+```
+
+Identify an exact position
+========================================================
+
+```{r}
+
+#1st column
+Census2020[,1]
+
+#1st row
+Census2020[1,]
+
+#Observation in column 1, row 1
+Census2020[1,1]
+
+```
+
+Export to csv 
+========================================================
+
+```{r, eval=FALSE}
+
+write.csv(Census2020, "Census2020.csv")
+
+```
+
+
+Part 2: Manipulate and transform with Tidyverse: intro to dplyr commands
+========================================================
+Using select, rename, filter, arrange, mutate, summarize
+  select() picks variables based on their names
+  rename() rename variables by name
+  filter() picks cases based on their values
+  arrange() changes the ordering of the rows
+  mutate() adds new variables that are functions of existing variables
+  summarise() reduces multiple values down to a single summary
+  
+
+Readin two ACS files: 2019 population and 2019 poverty rate 
+========================================================
+
+```{r}
+
+Census2019 <- read_csv("2019Pop.csv")
+
+Poverty2019 <- read_csv("2019Poverty.csv")
+
+```
+
+Use the select function to keep/select the columns: state name, region,
+2020 population,numeric change, percent change, and state rank
+========================================================
+
+```{r}
+
+Census2020Sub1 <- Census2020 %>% 
+  select(`Area`, 
+         `Region`,
+         `2020 Census Resident Population`, 
+         `Numeric Change`, 
+         `Percent Change`, 
+         `State Rank Based on 2020 Census Resident Population`)
+
+```
+
+View the subsetted object
+========================================================
+
+```{r}
+
+Census2020Sub1
+
+```
+
+Use the rename function to rename columns to easy to work with names
+========================================================
+
+```{r}
+
+Census2020Sub1 <- Census2020Sub1 %>% 
+  rename(State = Area, 
+         Pop2020 = `2020 Census Resident Population`, 
+         NumChange2020 = `Numeric Change`, 
+         PercentChange2020 = `Percent Change`, 
+         StateRank = `State Rank Based on 2020 Census Resident Population`)
+
+```
+
+View new column names
+========================================================
+
+```{r}
+
+str(Census2020Sub1)
+
+```
+
+Use the filter function to subset rows by pop size
+========================================================
+Use 9999999 as the limit
+
+```{r}
+
+PopAboveLimit <- Census2020Sub1 %>% 
+  filter(Pop2020 > 9999999)
+
+PopBelowLimit <- Census2020Sub1 %>% 
+  filter(Pop2020 <= 9999999)
+
+```
+
+View dimenstions of the new object
+========================================================
+
+```{r}
+
+dim(PopAboveLimit)
+
+dim(PopBelowLimit)
+
+```
+
+Use filter to subset rows by two conditions, using population and state rank
+========================================================
+Use a population limit of 9999999 and state rank limits to narrow down data
+
+```{r}
+
+PopAboveLimitAND <- Census2020Sub1 %>% 
+  filter(Pop2020 > 9999999 & StateRank >= 9)
+
+PopAboveLimitOR <- Census2020Sub1 %>% 
+  filter(Pop2020 > 9999999 | StateRank >= 50)
+
+```
+
+View new objects that meet the and/or criteria 
+========================================================
+
+```{r}
+
+dim(PopAboveLimitAND)
+
+dim(PopAboveLimitOR)
+
+```
+
+Convert state rank from integer to numeric
+========================================================
+
+```{r}
+str(Census2020Sub1$StateRank)
+
+Census2020Sub1$StateRank <- as.numeric(Census2020Sub1$StateRank, na.rm = TRUE)
+```
+
+Use the arrange function to sort the two population objects by state rank
+========================================================
+Order the filtered objects by ascending
+
+```{r}
+
+TopPopAsce <- PopAboveLimit %>% 
+  arrange(StateRank)   
+
+LowPopAsce <- PopBelowLimit %>% 
+  arrange(StateRank)  
+
+```
+
+View new objects arranged by state rank- ascending 
+========================================================
+
+```{r}
+
+head(TopPopAsce)
+
+```
+
+
+View new objects arranged by state rank- ascending 
+========================================================
+
+```{r}
+
+head(LowPopAsce)
+
+```
+
+
+Use the arrange function to sort the two population objects by state rank
+========================================================
+Order the filtered objects by descending
+
+```{r}
+
+TopPopDesc <- PopAboveLimit %>% 
+  arrange(desc(StateRank))
+
+LowPopDesc <- PopBelowLimit %>% 
+  arrange(desc(StateRank))
+
+```
+
+View new objects arranged by state rank- descending 
+========================================================
+
+```{r}
+
+head(TopPopDesc)
+
+```
+
+
+View new objects arranged by state rank- descending 
+========================================================
+
+```{r}
+
+head(LowPopDesc)
+
+```
+
+Use the mutate function to add a new column
+========================================================
+Calculate the 2010 pop using the 2020 pop and numeric change columns
+```{r}
+
+Census2020Mutate <- Census2020Sub1 %>% 
+  mutate(Pop2010 = Pop2020-NumChange2020)
+
+```
+
+View top observations of new object
+========================================================
+
+```{r}
+
+head(Census2020Mutate)
+
+```
+
+Use the summarise function to determine the total population in the US across all states
+========================================================
+Calculate for both 2020 and 2010
+```{r}
+
+Census2020PopSum <- Census2020Mutate %>% 
+  summarise(Total2020 = sum(Pop2020))
+
+Census2010PopSum <- Census2020Mutate %>% 
+  summarise(Total2010 = sum(Pop2010))
+
+```
+
+View new objects with totals of 2020 and 2010 population size
+========================================================
+
+```{r}
+
+Census2020PopSum
+
+Census2010PopSum
+
+```
+
+Calculate the average national population for both 2020 and 2010
+========================================================
+
+```{r}
+
+Census2020PopMean <- Census2020Mutate %>% 
+  summarize(Total2020 = mean(Pop2020))
+
+Census2010PopMean <- Census2020Mutate %>% 
+  summarize(Total2010 = mean(Pop2010))
+
+```
+
+View new objects with averages of 2020 and 2010 population size
+========================================================
+
+```{r}
+
+Census2020PopMean
+
+Census2010PopMean
+
+```
+
+Calculate the total and average difference in population between 2020 and 2010
+========================================================
+
+```{r}
+
+Census2020PopSum - Census2010PopSum
+
+Census2020PopMean - Census2010PopMean
+
+```
+
+Calculate the sum of the large states
+========================================================
+Use the object PopAboveLimit
+
+```{r}
+
+PopAboveLimitSum <- PopAboveLimit %>% 
+  summarize(TotalLarge2020 = sum(Pop2020))
+
+```
+
+View new object with total population of large states
+========================================================
+
+```{r}
+
+PopAboveLimitSum
+
+```
+
+Calculate the sum of small states
+========================================================
+Use the object PopBelowLimit
+```{r}
+
+PopBelowLimitSum <- PopBelowLimit %>% 
+  summarize(TotalSmall2020 = sum(Pop2020))
+
+```
+
+View new object with total population of small states
+========================================================
+
+```{r}
+
+PopBelowLimitSum
+
+```
+
+Examples of combining multiple dplyr verbs in one workflow
+========================================================
+You can use all of the verbs chained together in logical order to achieve complex results
+
+
+Utilize select and rename functions in one workflow 
+========================================================
+
+```{r}
+
+Census2020Bonus <- Census2020 %>% 
+  select(`Area`, 
+         `2020 Census Resident Population`, 
+         `2010 Census Resident Population`,
+         `State Rank Based on 2020 Census Resident Population`) %>% 
+  rename(State = Area, 
+         Pop2020 = `2020 Census Resident Population`, 
+         Pop2010 = `2010 Census Resident Population`,
+         StateRank = `State Rank Based on 2020 Census Resident Population`)
+
+```
+
+View top observations of new object
+========================================================
+
+```{r}
+
+head(Census2020Bonus)
+
+```
+
+Utilize filter and arrange in one workflow
+========================================================
+
+```{r}
+
+Census2020Bonus1 <- Census2020Bonus %>% 
+  filter(StateRank >= 2 & StateRank <= 50) %>% 
+  arrange(desc(Pop2020))
+
+```
+
+View new object
+========================================================
+
+```{r}
+
+glimpse(Census2020Bonus1)
+
+
+```
+
+Combine the mutate and summarize functions in one workflow
+========================================================
+Sum the population of top largest and smallest states using prior object
+
+```{r}
+
+Census2020Bonus2 <- Census2020Bonus1 %>% 
+  mutate(size = case_when(Pop2020 > 9999999 ~ 'Big', 
+                          Pop2020 <= 9999999 ~ 'Small')) %>% 
+  group_by(size) %>% 
+  summarize(Total2020 = sum(Pop2020))
+
+```
+
+View new object
+========================================================
+
+```{r}
+
+glimpse(Census2020Bonus2)
+
+```
+
+Put it all together
+========================================================
+
+```{r}
+Census2020Workflow <- Census2020 %>% 
+  select(`Area`, 
+         `2020 Census Resident Population`, 
+         `2010 Census Resident Population`,
+         `State Rank Based on 2020 Census Resident Population`) %>% 
+  rename(State = Area, 
+         Pop2020 = `2020 Census Resident Population`, 
+         Pop2010 = `2010 Census Resident Population`,
+         StateRank = `State Rank Based on 2020 Census Resident Population`) %>%
+  filter(StateRank >= 2 & StateRank <= 50) %>% 
+  arrange(desc(Pop2020)) %>%
+  mutate(size = case_when(Pop2020 > 9999999 ~ 'Big', 
+                          Pop2020 <= 9999999 ~ 'Small')) %>% 
+  group_by(size) %>% 
+  summarize(Total2020 = sum(Pop2020))
+
+```
+
+View outcome, it is the same as the workflow seen prior
+========================================================
+
+```{r}
+Census2020Workflow
+```
+
+Join 2020 Census with 2019 ACS Population, by state
+========================================================
+
+```{r}
+
+CensusData1 <- left_join(Census2020Sub1, Census2019, by = "State")
+
+```
+
+View new joined object
+========================================================
+
+```{r}
+
+head(CensusData1)
+
+```
+
+Join 2020 and 2019 population object with 2019 ACS Poverty, by state
+========================================================
+Use rename function to change generic "estimate" column to something specific before join
+
+```{r}
+
+CensusData1 <- CensusData1 %>% 
+  rename(PopEstimate2019 = Estimate)
+
+CensusData2 <- left_join(CensusData1, Poverty2019, by = "State")
+
+```
+
+View new object
+========================================================
+
+```{r}
+
+head(CensusData2)
+
+```
+
+Use filter and mutate functions to add a ranking variable for states based on below poverty variable
+========================================================
+
+```{r}
+
+CensusDataRanked <- CensusData2 %>% 
+  mutate(PovertyRank = dense_rank(desc(BelowPoverty))) %>% 
+  filter(PovertyRank <= 10)
+
+```
+
+View new object
+========================================================
+
+```{r}
+
+glimpse(CensusDataRanked)
+
+```
+
+View Povety Rank column in new object
+========================================================
+
+```{r}
+
+glimpse(CensusDataRanked$PovertyRank)
+
+```
+
+Visualize using ggplot
+========================================================
+
+```{r}
+
+ggplot(CensusDataRanked) +
+  geom_bar(mapping = aes(x = reorder(State, -BelowPoverty), 
+                         y = BelowPoverty, 
+                         fill = PercentChange2020), 
+           stat = 'identity') +
+  labs(title = "Top 10 Most Populated States in 2020",
+       x = "State",
+       y = "Population Below Poverty") +
+  coord_flip()
+  
+```
+
+Part 3: Explore with TidyCensus
+========================================================
+
+API Key and load Tidycensus package
+========================================================
+
+```{r}
+library(tidycensus)
+
+census_api_key("1628931ba3a0a3e59ffe62387248b2f340e3c1e2", overwrite = TRUE)
+```
+
+Search for Variables
+========================================================
+
+```{r}
+vars <- load_variables(2020, "pl")
+
+#View
+head(vars)
+```
+
+Look at Decennial Population Numbers
+========================================================
+
+```{r}
+pop20 <- get_decennial(
+  geography = "state",
+  variables = "P1_001N",
+  year = 2020)
+
+glimpse(pop20)
+```
+
+View DMV Population
+========================================================
+District of Columbia
+
+```{r}
+
+pop20 %>% filter(GEOID == 11)
+
+```
+
+View DMV Population
+========================================================
+Maryland
+
+```{r}
+
+pop20 %>% filter(GEOID == 24)
+
+```
+
+View DMV Population
+========================================================
+Virginia
+
+```{r}
+
+pop20 %>% filter(GEOID == 51)
+
+```
+
+View DMV Population of original data
+========================================================
+District of Columbia
+
+```{r}
+
+Census2020 %>% filter(Area == "District of Columbia")
+
+```
+
+View DMV Population of original data
+========================================================
+Maryland
+
+```{r}
+
+Census2020 %>% filter(Area == "Maryland")
+
+```
+
+View DMV Population of original data
+========================================================
+Virginia
+
+```{r}
+
+Census2020 %>% filter(Area == "Virginia")
+
+```
+
+Compare the two sources of data, create object for each
+========================================================
+
+```{r}
+#District of Columbia
+API_DC <- pop20 %>% 
+  filter(GEOID == 11) %>% 
+  select(value)
+
+ACS_DC <- Census2020 %>% 
+  filter(Area == "District of Columbia") %>% 
+  select(`2020 Census Resident Population`)
+
+
+#Maryland
+API_MD <- pop20 %>% filter(GEOID == 24) %>% 
+  select(value)
+
+ACS_MD <- Census2020 %>% 
+  filter(Area == "Maryland") %>% 
+  select(`2020 Census Resident Population`)
+
+
+#Virginia
+API_VA <- pop20 %>% filter(GEOID == 51) %>% 
+  select(value)
+
+ACS_VA <- Census2020 %>% 
+  filter(Area == "Virginia") %>% 
+  select(`2020 Census Resident Population`)
+```
+
+Do the two sources of 2020 Census data match?
+========================================================
+
+```{r}
+all(API_DC == ACS_DC)
+
+all(API_MD == ACS_MD)
+
+all(API_VA == ACS_VA)
+```
+
+Group quarter data
+========================================================
+
+```{r}
+
+group_quarters <- get_decennial(
+  geography = "state", 
+  table = "P5", 
+  year = 2020,
+  output = "wide")
+
+View group quarter data
+========================================================
+
+```{r}
+
+head(group_quarters)
+
+```
+
+Group quarters DMV data
+========================================================
+
+```{r}
+
+dc_group_quarters <- get_decennial(
+  geography = "state", 
+  table = "P5", 
+  state = "DC",
+  year = 2020,
+  output = "wide")
+  
+md_group_quarters <- get_decennial(
+  geography = "state", 
+  table = "P5", 
+  state = "MD",
+  year = 2020,
+  output = "wide")
+
+va_group_quarters <- get_decennial(
+  geography = "state", 
+  table = "P5", 
+  state = "VA",
+  year = 2020,
+  output = "wide")
+  
+```
+
+Use rbind to concatenate rows
+========================================================
+
+```{r}
+
+dmv_group_quarters <- rbind(va_group_quarters,
+                            md_group_quarters,
+                            dc_group_quarters)
+                            
+```
+
+View DMV group quarters data
+========================================================
+
+```{r}
+
+dmv_group_quarters
+
+```
+
+Hispanic population in the DMV data
+========================================================
+
+```{r}
+va_hispanic <- get_decennial(
+  geography = "county", 
+  variables = "P2_002N", 
+  state = "VA", 
+  year = 2020)
+
+md_hispanic <- get_decennial(
+  geography = "county", 
+  variables = "P2_002N", 
+  state = "MD", 
+  year = 2020)
+
+dc_hispanic <- get_decennial(
+  geography = "county", 
+  variables = "P2_002N", 
+  state = "DC", 
+  year = 2020)
+```
+
+Hispanic population in the DMV data
+========================================================
+
+```{r}
+
+va_hispanic
+md_hispanic
+dc_hispanic
+
+```
+
+Resources for learning more
+========================================================
+## SEE README For more resources 
